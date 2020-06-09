@@ -1,4 +1,4 @@
-ln: fallo al crear el enlace simbÃ³lico Â«MakefileÂ»: El fichero ya existe
+ln: failed to create symbolic link â€˜Makefileâ€™: File exists
 >> Práctica de Sistemas Operativos Distribuidos
 >> ============================================
 >> DMUTEX(Distributed Mutex)
@@ -418,36 +418,6 @@ B: RECEIVE
 B: UNLOCK SEM
 >> Ejecutando: ./controlador INANICION $TICK
 >> Comparando salidas
->> A: [EVENT]-> A{TICK} B{--} C{--}							A: [EVENT]-> A{TICK} B{--} C{--}
->> B: [EVENT]-> A{--} B{TICK} C{--}							B: [EVENT]-> A{--} B{TICK} C{--}
->> C: [LOCK SEM]-> A{--} B{--} C{TICK|SEND(LOCK,A)|SEND(LOCK,B)}				C: [LOCK SEM]-> A{--} B{--} C{TICK|SEND(LOCK,A)|SEND(LOCK,B)}
->> C: [GETCLOCK]-> A{--} B{--} C{LC[0,0,1]}						C: [GETCLOCK]-> A{--} B{--} C{LC[0,0,1]}
->> A: [LOCK SEM]-> A{TICK|SEND(LOCK,B)|SEND(LOCK,C)} B{--} C{--}				A: [LOCK SEM]-> A{TICK|SEND(LOCK,B)|SEND(LOCK,C)} B{--} C{--}
->> # Por prioridad de PID entraría A 							# Por prioridad de PID entraría A 
->> C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)}			C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)}
->> A: [RECEIVE]-> A{RECEIVE(LOCK,C)|TICK} B{--} C{--}					A: [RECEIVE]-> A{RECEIVE(LOCK,C)|TICK} B{--} C{--}
->> A: [RECEIVE]-> A{RECEIVE(OK,C)|TICK} B{--} C{--}					A: [RECEIVE]-> A{RECEIVE(OK,C)|TICK} B{--} C{--}
->> # B Responde OK a A y C									# B Responde OK a A y C
->> B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,C)|TICK|TICK|SEND(OK,C)} C{--}			B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,C)|TICK|TICK|SEND(OK,C)} C{--}
->> B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)} C{--}			B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)} C{--}
->> A: [RECEIVE]-> A{RECEIVE(OK,B)|TICK|MUTEX(SEM)} B{--} C{--}				A: [RECEIVE]-> A{RECEIVE(OK,B)|TICK|MUTEX(SEM)} B{--} C{--}
->> C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,B)|TICK}					C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,B)|TICK}
->> # A obtiene el semaforo									# A obtiene el semaforo
->> B: [LOCK SEM]-> A{--} B{TICK|SEND(LOCK,A)|SEND(LOCK,C)} C{--}				B: [LOCK SEM]-> A{--} B{TICK|SEND(LOCK,A)|SEND(LOCK,C)} C{--}
->> B: [GETCLOCK]-> A{--} B{LC[2,6,1]} C{--}						B: [GETCLOCK]-> A{--} B{LC[2,6,1]} C{--}
->> # C recibirá el mensaje pero no 								# C recibirá el mensaje pero no 
->> # respondera (C tiene prioridad)							# respondera (C tiene prioridad)
->> C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,B)|TICK}				      |	C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,B)|TICK|TICK|SEND(OK,B)}
->> # A termina 										# A termina 
->> A: [UNLOCK SEM]-> A{TICK|SEND(OK,C)} B{--} C{--}					A: [UNLOCK SEM]-> A{TICK|SEND(OK,C)} B{--} C{--}
->> # A daría paso a C									# A daría paso a C
->> A: [RECEIVE]-> A{RECEIVE(LOCK,B)|TICK|TICK|SEND(OK,B)} B{--} C{--}			A: [RECEIVE]-> A{RECEIVE(LOCK,B)|TICK|TICK|SEND(OK,B)} B{--} C{--}
->> C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,A)|TICK|MUTEX(SEM)}				C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,A)|TICK|MUTEX(SEM)}
->> # C entra en la región									# C entra en la región
->> C: [UNLOCK SEM]-> A{--} B{--} C{TICK|SEND(OK,B)}				      |	C: [UNLOCK SEM]-> A{--} B{--} C{--}
->> B: [RECEIVE]-> A{--} B{RECEIVE(OK,A)|TICK} C{--}				      |	B: [RECEIVE]-> A{--} B{RECEIVE(OK,C)|TICK} C{--}
->> B: [RECEIVE]-> A{--} B{RECEIVE(OK,C)|TICK|MUTEX(SEM)} C{--}			      |	B: [RECEIVE]-> A{--} B{RECEIVE(OK,A)|TICK|MUTEX(SEM)} C{--}
->> B: [UNLOCK SEM]-> A{--} B{--} C{--}							B: [UNLOCK SEM]-> A{--} B{--} C{--}
 >> Este caso es similar al anterior, pero en esta situción un
 >> proceso entra dentro de la región crítica y recibe una petición
 >> de un nuevo proceso. Esto hace que al liberar el semáforo se
@@ -499,163 +469,7 @@ B: RECEIVE
 B: UNLOCK SEM
 >> Ejecutando: ./controlador INANICION2 $TICK
 >> Comparando salidas
->> A: [EVENT]-> A{TICK} B{--} C{--}							A: [EVENT]-> A{TICK} B{--} C{--}
->> B: [EVENT]-> A{--} B{TICK} C{--}							B: [EVENT]-> A{--} B{TICK} C{--}
->> C: [LOCK SEM]-> A{--} B{--} C{TICK|SEND(LOCK,A)|SEND(LOCK,B)}				C: [LOCK SEM]-> A{--} B{--} C{TICK|SEND(LOCK,A)|SEND(LOCK,B)}
->> C: [GETCLOCK]-> A{--} B{--} C{LC[0,0,1]}						C: [GETCLOCK]-> A{--} B{--} C{LC[0,0,1]}
->> A: [LOCK SEM]-> A{TICK|SEND(LOCK,B)|SEND(LOCK,C)} B{--} C{--}				A: [LOCK SEM]-> A{TICK|SEND(LOCK,B)|SEND(LOCK,C)} B{--} C{--}
->> # B Responde OK a A y C									# B Responde OK a A y C
->> B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,C)|TICK|TICK|SEND(OK,C)} C{--}			B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,C)|TICK|TICK|SEND(OK,C)} C{--}
->> B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)} C{--}			B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)} C{--}
->> # Por prioridad de PID entraría A 							# Por prioridad de PID entraría A 
->> C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)}			C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)}
->> # A recibiría:										# A recibiría:
->> # - LOCK(C) -> encola petición								# - LOCK(C) -> encola petición
->> # - OK(B) y OK(C) -> cierra mutex							# - OK(B) y OK(C) -> cierra mutex
->> # A obtiene el semaforo									# A obtiene el semaforo
->> A: [RECEIVE]-> A{RECEIVE(LOCK,C)|TICK} B{--} C{--}					A: [RECEIVE]-> A{RECEIVE(LOCK,C)|TICK} B{--} C{--}
->> A: [RECEIVE]-> A{RECEIVE(OK,B)|TICK} B{--} C{--}					A: [RECEIVE]-> A{RECEIVE(OK,B)|TICK} B{--} C{--}
->> A: [RECEIVE]-> A{RECEIVE(OK,C)|TICK|MUTEX(SEM)} B{--} C{--}				A: [RECEIVE]-> A{RECEIVE(OK,C)|TICK|MUTEX(SEM)} B{--} C{--}
->> # C recibe el OK de B (falt A que esta en la						# C recibe el OK de B (falt A que esta en la
->> # región crítica).									# región crítica).
->> C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,B)|TICK}					C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,B)|TICK}
->> # Ahora B tambien quiere entrar en la región.						# Ahora B tambien quiere entrar en la región.
->> B: [LOCK SEM]-> A{--} B{TICK|SEND(LOCK,A)|SEND(LOCK,C)} C{--}				B: [LOCK SEM]-> A{--} B{TICK|SEND(LOCK,A)|SEND(LOCK,C)} C{--}
->> B: [GETCLOCK]-> A{--} B{LC[2,6,1]} C{--}						B: [GETCLOCK]-> A{--} B{LC[2,6,1]} C{--}
->> # C recibirá el mensaje pero no 								# C recibirá el mensaje pero no 
->> # respondera (C tiene prioridad) -> encola pecición.					# respondera (C tiene prioridad) -> encola pecición.
->> C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,B)|TICK}				      |	C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,B)|TICK|TICK|SEND(OK,B)}
->> # A no responde porque está en la 							# A no responde porque está en la 
->> # región crítica (encola la petición) 							# región crítica (encola la petición) 
->> A: [RECEIVE]-> A{RECEIVE(LOCK,B)|TICK} B{--} C{--}					A: [RECEIVE]-> A{RECEIVE(LOCK,B)|TICK} B{--} C{--}
->> # A termina (debe liberar los dos mensajes que tiene					# A termina (debe liberar los dos mensajes que tiene
->> # encolados a esperas de entrar en la región).						# encolados a esperas de entrar en la región).
->> A: [UNLOCK SEM]-> A{TICK|SEND(OK,C)|TICK|SEND(OK,B)} B{--} C{--}			A: [UNLOCK SEM]-> A{TICK|SEND(OK,C)|TICK|SEND(OK,B)} B{--} C{--}
->> C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,A)|TICK|MUTEX(SEM)}				C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,A)|TICK|MUTEX(SEM)}
->> B: [RECEIVE]-> A{--} B{RECEIVE(OK,A)|TICK} C{--}				      |	B: [RECEIVE]-> A{--} B{RECEIVE(OK,C)|TICK} C{--}
->> # C entra en la región									# C entra en la región
->> C: [UNLOCK SEM]-> A{--} B{--} C{TICK|SEND(OK,B)}				      |	C: [UNLOCK SEM]-> A{--} B{--} C{--}
->> B: [RECEIVE]-> A{--} B{RECEIVE(OK,C)|TICK|MUTEX(SEM)} C{--}			      |	B: [RECEIVE]-> A{--} B{RECEIVE(OK,A)|TICK|MUTEX(SEM)} C{--}
->> B: [UNLOCK SEM]-> A{--} B{--} C{--}							B: [UNLOCK SEM]-> A{--} B{--} C{--}
 ======================> opt_con_bloqueo <====================
->>>>>>>>>>>>>>   *********
->>>>>>>>>>>>>>   * ERROR *
->>>>>>>>>>>>>>   *********
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> A: [EVENT]-> A{TICK} B{--} C{--}							A: [EVENT]-> A{TICK} B{--} C{--}
-B: [EVENT]-> A{--} B{TICK} C{--}							B: [EVENT]-> A{--} B{TICK} C{--}
-C: [LOCK SEM]-> A{--} B{--} C{TICK|SEND(LOCK,A)|SEND(LOCK,B)}				C: [LOCK SEM]-> A{--} B{--} C{TICK|SEND(LOCK,A)|SEND(LOCK,B)}
-C: [GETCLOCK]-> A{--} B{--} C{LC[0,0,1]}						C: [GETCLOCK]-> A{--} B{--} C{LC[0,0,1]}
-A: [LOCK SEM]-> A{TICK|SEND(LOCK,B)|SEND(LOCK,C)} B{--} C{--}				A: [LOCK SEM]-> A{TICK|SEND(LOCK,B)|SEND(LOCK,C)} B{--} C{--}
-# Por prioridad de PID entraría A 							# Por prioridad de PID entraría A 
-C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)}			C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)}
-A: [RECEIVE]-> A{RECEIVE(LOCK,C)|TICK} B{--} C{--}					A: [RECEIVE]-> A{RECEIVE(LOCK,C)|TICK} B{--} C{--}
-A: [RECEIVE]-> A{RECEIVE(OK,C)|TICK} B{--} C{--}					A: [RECEIVE]-> A{RECEIVE(OK,C)|TICK} B{--} C{--}
-# B Responde OK a A y C									# B Responde OK a A y C
-B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,C)|TICK|TICK|SEND(OK,C)} C{--}			B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,C)|TICK|TICK|SEND(OK,C)} C{--}
-B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)} C{--}			B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)} C{--}
-A: [RECEIVE]-> A{RECEIVE(OK,B)|TICK|MUTEX(SEM)} B{--} C{--}				A: [RECEIVE]-> A{RECEIVE(OK,B)|TICK|MUTEX(SEM)} B{--} C{--}
-C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,B)|TICK}					C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,B)|TICK}
-# A obtiene el semaforo									# A obtiene el semaforo
-B: [LOCK SEM]-> A{--} B{TICK|SEND(LOCK,A)|SEND(LOCK,C)} C{--}				B: [LOCK SEM]-> A{--} B{TICK|SEND(LOCK,A)|SEND(LOCK,C)} C{--}
-B: [GETCLOCK]-> A{--} B{LC[2,6,1]} C{--}						B: [GETCLOCK]-> A{--} B{LC[2,6,1]} C{--}
-# C recibirá el mensaje pero no 								# C recibirá el mensaje pero no 
-# respondera (C tiene prioridad)							# respondera (C tiene prioridad)
-C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,B)|TICK}				      |	C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,B)|TICK|TICK|SEND(OK,B)}
-# A termina 										# A termina 
-A: [UNLOCK SEM]-> A{TICK|SEND(OK,C)} B{--} C{--}					A: [UNLOCK SEM]-> A{TICK|SEND(OK,C)} B{--} C{--}
-# A daría paso a C									# A daría paso a C
-A: [RECEIVE]-> A{RECEIVE(LOCK,B)|TICK|TICK|SEND(OK,B)} B{--} C{--}			A: [RECEIVE]-> A{RECEIVE(LOCK,B)|TICK|TICK|SEND(OK,B)} B{--} C{--}
-C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,A)|TICK|MUTEX(SEM)}				C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,A)|TICK|MUTEX(SEM)}
-# C entra en la región									# C entra en la región
-C: [UNLOCK SEM]-> A{--} B{--} C{TICK|SEND(OK,B)}				      |	C: [UNLOCK SEM]-> A{--} B{--} C{--}
-B: [RECEIVE]-> A{--} B{RECEIVE(OK,A)|TICK} C{--}				      |	B: [RECEIVE]-> A{--} B{RECEIVE(OK,C)|TICK} C{--}
-B: [RECEIVE]-> A{--} B{RECEIVE(OK,C)|TICK|MUTEX(SEM)} C{--}			      |	B: [RECEIVE]-> A{--} B{RECEIVE(OK,A)|TICK|MUTEX(SEM)} C{--}
-B: [UNLOCK SEM]-> A{--} B{--} C{--}							B: [UNLOCK SEM]-> A{--} B{--} C{--}
-A: [EVENT]-> A{TICK} B{--} C{--}							A: [EVENT]-> A{TICK} B{--} C{--}
-B: [EVENT]-> A{--} B{TICK} C{--}							B: [EVENT]-> A{--} B{TICK} C{--}
-C: [LOCK SEM]-> A{--} B{--} C{TICK|SEND(LOCK,A)|SEND(LOCK,B)}				C: [LOCK SEM]-> A{--} B{--} C{TICK|SEND(LOCK,A)|SEND(LOCK,B)}
-C: [GETCLOCK]-> A{--} B{--} C{LC[0,0,1]}						C: [GETCLOCK]-> A{--} B{--} C{LC[0,0,1]}
-A: [LOCK SEM]-> A{TICK|SEND(LOCK,B)|SEND(LOCK,C)} B{--} C{--}				A: [LOCK SEM]-> A{TICK|SEND(LOCK,B)|SEND(LOCK,C)} B{--} C{--}
-# B Responde OK a A y C									# B Responde OK a A y C
-B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,C)|TICK|TICK|SEND(OK,C)} C{--}			B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,C)|TICK|TICK|SEND(OK,C)} C{--}
-B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)} C{--}			B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)} C{--}
-# Por prioridad de PID entraría A 							# Por prioridad de PID entraría A 
-C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)}			C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)}
-# A recibiría:										# A recibiría:
-# - LOCK(C) -> encola petición								# - LOCK(C) -> encola petición
-# - OK(B) y OK(C) -> cierra mutex							# - OK(B) y OK(C) -> cierra mutex
-# A obtiene el semaforo									# A obtiene el semaforo
-A: [RECEIVE]-> A{RECEIVE(LOCK,C)|TICK} B{--} C{--}					A: [RECEIVE]-> A{RECEIVE(LOCK,C)|TICK} B{--} C{--}
-A: [RECEIVE]-> A{RECEIVE(OK,B)|TICK} B{--} C{--}					A: [RECEIVE]-> A{RECEIVE(OK,B)|TICK} B{--} C{--}
-A: [RECEIVE]-> A{RECEIVE(OK,C)|TICK|MUTEX(SEM)} B{--} C{--}				A: [RECEIVE]-> A{RECEIVE(OK,C)|TICK|MUTEX(SEM)} B{--} C{--}
-# C recibe el OK de B (falt A que esta en la						# C recibe el OK de B (falt A que esta en la
-# región crítica).									# región crítica).
-C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,B)|TICK}					C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,B)|TICK}
-# Ahora B tambien quiere entrar en la región.						# Ahora B tambien quiere entrar en la región.
-B: [LOCK SEM]-> A{--} B{TICK|SEND(LOCK,A)|SEND(LOCK,C)} C{--}				B: [LOCK SEM]-> A{--} B{TICK|SEND(LOCK,A)|SEND(LOCK,C)} C{--}
-B: [GETCLOCK]-> A{--} B{LC[2,6,1]} C{--}						B: [GETCLOCK]-> A{--} B{LC[2,6,1]} C{--}
-# C recibirá el mensaje pero no 								# C recibirá el mensaje pero no 
-# respondera (C tiene prioridad) -> encola pecición.					# respondera (C tiene prioridad) -> encola pecición.
-C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,B)|TICK}				      |	C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,B)|TICK|TICK|SEND(OK,B)}
-# A no responde porque está en la 							# A no responde porque está en la 
-# región crítica (encola la petición) 							# región crítica (encola la petición) 
-A: [RECEIVE]-> A{RECEIVE(LOCK,B)|TICK} B{--} C{--}					A: [RECEIVE]-> A{RECEIVE(LOCK,B)|TICK} B{--} C{--}
-# A termina (debe liberar los dos mensajes que tiene					# A termina (debe liberar los dos mensajes que tiene
-# encolados a esperas de entrar en la región).						# encolados a esperas de entrar en la región).
-A: [UNLOCK SEM]-> A{TICK|SEND(OK,C)|TICK|SEND(OK,B)} B{--} C{--}			A: [UNLOCK SEM]-> A{TICK|SEND(OK,C)|TICK|SEND(OK,B)} B{--} C{--}
-C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,A)|TICK|MUTEX(SEM)}				C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,A)|TICK|MUTEX(SEM)}
-B: [RECEIVE]-> A{--} B{RECEIVE(OK,A)|TICK} C{--}				      |	B: [RECEIVE]-> A{--} B{RECEIVE(OK,C)|TICK} C{--}
-# C entra en la región									# C entra en la región
-C: [UNLOCK SEM]-> A{--} B{--} C{TICK|SEND(OK,B)}				      |	C: [UNLOCK SEM]-> A{--} B{--} C{--}
-B: [RECEIVE]-> A{--} B{RECEIVE(OK,C)|TICK|MUTEX(SEM)} C{--}			      |	B: [RECEIVE]-> A{--} B{RECEIVE(OK,A)|TICK|MUTEX(SEM)} C{--}
-B: [UNLOCK SEM]-> A{--} B{--} C{--}							B: [UNLOCK SEM]-> A{--} B{--} C{--}
-
->>>>>>>>>>>>>> El formato de salida no es el esperado
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> PROGRAMA:       ./controlador INANICION2 $TICK
->>>>>>>>>>>>>> MANDATO/OPCIÓN: -
->>>>>>>>>>>>>> SALIDA ESTÁNDAR:
-[1] A: [EVENT]-> A{TICK} B{--} C{--}
-[2] B: [EVENT]-> A{--} B{TICK} C{--}
-[3] C: [LOCK SEM]-> A{--} B{--} C{TICK|SEND(LOCK,A)|SEND(LOCK,B)}
-[4] C: [GETCLOCK]-> A{--} B{--} C{LC[0,0,1]}
-[5] A: [LOCK SEM]-> A{TICK|SEND(LOCK,B)|SEND(LOCK,C)} B{--} C{--}
-[6] # B Responde OK a A y C
-[7] B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,C)|TICK|TICK|SEND(OK,C)} C{--}
-[8] B: [RECEIVE]-> A{--} B{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)} C{--}
-[9] # Por prioridad de PID entraría A 
-[10] C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,A)|TICK|TICK|SEND(OK,A)}
-[11] # A recibiría:
-[12] # - LOCK(C) -> encola petición
-[13] # - OK(B) y OK(C) -> cierra mutex
-[14] # A obtiene el semaforo
-[15] A: [RECEIVE]-> A{RECEIVE(LOCK,C)|TICK} B{--} C{--}
-[16] A: [RECEIVE]-> A{RECEIVE(OK,B)|TICK} B{--} C{--}
-[17] A: [RECEIVE]-> A{RECEIVE(OK,C)|TICK|MUTEX(SEM)} B{--} C{--}
-[18] # C recibe el OK de B (falt A que esta en la
-[19] # región crítica).
-[20] C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,B)|TICK}
-[21] # Ahora B tambien quiere entrar en la región.
-[22] B: [LOCK SEM]-> A{--} B{TICK|SEND(LOCK,A)|SEND(LOCK,C)} C{--}
-[23] B: [GETCLOCK]-> A{--} B{LC[2,6,1]} C{--}
-[24] # C recibirá el mensaje pero no 
-[25] # respondera (C tiene prioridad) -> encola pecición.
-[26] C: [RECEIVE]-> A{--} B{--} C{RECEIVE(LOCK,B)|TICK|TICK|SEND(OK,B)}
-[27] # A no responde porque está en la 
-[28] # región crítica (encola la petición) 
-[29] A: [RECEIVE]-> A{RECEIVE(LOCK,B)|TICK} B{--} C{--}
-[30] # A termina (debe liberar los dos mensajes que tiene
-[31] # encolados a esperas de entrar en la región).
-[32] A: [UNLOCK SEM]-> A{TICK|SEND(OK,C)|TICK|SEND(OK,B)} B{--} C{--}
-[33] C: [RECEIVE]-> A{--} B{--} C{RECEIVE(OK,A)|TICK|MUTEX(SEM)}
-[34] B: [RECEIVE]-> A{--} B{RECEIVE(OK,C)|TICK} C{--}
-[35] # C entra en la región
-[36] C: [UNLOCK SEM]-> A{--} B{--} C{--}
-[37] B: [RECEIVE]-> A{--} B{RECEIVE(OK,A)|TICK|MUTEX(SEM)} C{--}
-[38] B: [UNLOCK SEM]-> A{--} B{--} C{--}
->>>>>>>>>>>>>> ERROR ESTÁNDAR:
->>>>>>>>>>>>>>
 ======================> extra_multisemaforo <====================
 >> PRUEBA DE LAS FUNCIONALIDADES OPCIONALES (III - Varios semáforos)
 >> Esta prueba consiste en un ejemplo sencillo con varios semáforos.
@@ -838,8 +652,8 @@ B: [UNLOCK S2]-> A{--} B{--} C{--}						      <
 >>  (15) base_independientes    OK +15/+15
 >>  (25) base_mensajes          OK +25/+25
 >>  (15) opt_sin_bloqueo        OK +15/+15
->>  (25) opt_con_bloqueo        ERROR: El formato de salida no es el esperado +15/+25
+>>  (25) opt_con_bloqueo        OK +25/+25
 >>  (20) extra_multisemaforo    ERROR: El formato de salida no es el esperado +0/+20
 >>
->> NOTA FINAL: 70
+>> NOTA FINAL: 80
 >>

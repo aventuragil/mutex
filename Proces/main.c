@@ -51,12 +51,13 @@ int main(int argc, char *argv[])
     {
         char nombre[10];
         int puerto;
+        int mutex;
     } procesos;
     struct procesos process[MAX_PROCS];
     struct miMensaje msj;
     int mutex = 0;
     int peticionMutex = 0;
-    char *tipos[] = {"MSG", "LOCK", "OK"};
+    //char *tipos[] = {"MSG", "LOCK", "OK"};
 
     if (argc < 2)
     {
@@ -109,6 +110,7 @@ int main(int argc, char *argv[])
         /* Habra que guardarlo en algun sitio */
         strcpy(process[nprocess].nombre, proc);
         process[nprocess].puerto = port;
+        process[nprocess].mutex = 0;
 
         if (!strcmp(proc, argv[1]))
         {
@@ -121,6 +123,7 @@ int main(int argc, char *argv[])
     /* Inicializar Reloj */
     int LC[nprocess];
     int relojLock[nprocess];
+    int peticionLock[nprocess];
     int i;
     for (i = 0; i < nprocess; i++)
     {
@@ -248,33 +251,55 @@ int main(int argc, char *argv[])
                                 puerto = i;
                             }
                         }
-                        if (position > puerto) {
-                            printf("%s: TICK\n", process[position].nombre);
-                            LC[position]++;
-                            printf("%s: SEND(OK,%s)\n", process[position].nombre, msj.seccion);
-                            direcciondestino.sin_family = AF_INET;
-                            direcciondestino.sin_addr.s_addr = INADDR_ANY;
-                            int puerto;
-                            for (i = 0; i < nprocess; i++)
-                            {
-                                if (strcmp(process[i].nombre, msj.seccion) == 0)
+                        
+                        int q, flag = 1; //pide tiene alguna mayor que el que no por lo tanto tiene que ser por pid
+                        for(q = 0; q < nprocess; q++){
+                            if(peticionLock[q] > msj.LC[q]){
+                                //fprintf(stderr, "\n\n\n LCA(%s)[%d] |>| LC(%s)[%d] \n\n\n", process[position].nombre, peticionLock[q],msj.seccion, msj.LC[q]);
+                                flag = 1;
+                                q = nprocess;
+                            }else if(peticionLock[q] <= msj.LC[q]){
+                                //fprintf(stderr, "\n\n\n LCA(%s)[%d] |<| LC(%s)[%d] \n\n\n", process[position].nombre, peticionLock[q],msj.seccion, msj.LC[q]);
+                                flag = 0;
+                            } //pide tiene todas menor que el que no, por lo tanto pasa el
+                              
+                        }
+/*                         fprintf(stderr, "\n\n\n LCA(%s)[%d,%d,%d] |%d| LC(%s)[%d,%d,%d] \n\n\n", 
+                        process[position].nombre, peticionLock[0], peticionLock[1], peticionLock[2], flag,
+                        msj.seccion, msj.LC[0], msj.LC[1], msj.LC[2]
+                        ); */
+                        if (flag == 1) {
+                            if (position > puerto) {
+                                printf("%s: TICK\n", process[position].nombre);
+                                LC[position]++;
+                                printf("%s: SEND(OK,%s)\n", process[position].nombre, msj.seccion);
+                                direcciondestino.sin_family = AF_INET;
+                                direcciondestino.sin_addr.s_addr = INADDR_ANY;
+                                int puerto;
+                                for (i = 0; i < nprocess; i++)
                                 {
-                                    puerto = i;
+                                    if (strcmp(process[i].nombre, msj.seccion) == 0)
+                                    {
+                                        puerto = i;
+                                    }
                                 }
-                            }
-                            direcciondestino.sin_port = process[puerto].puerto;
-                            msj.tipo = OK;
-                            memcpy(&msj.LC, &LC, sizeof(int) * nprocess);
-                            strcpy(msj.seccion, process[position].nombre);
-                            if (sendto(scket, &msj, sizeof(msj), 0, (struct sockaddr *)&direcciondestino, sizeof(direcciondestino)) < 0)
-                            {
-                                perror("error en sendto");
-                                close(scket);
-                                return 1;
+                                direcciondestino.sin_port = process[puerto].puerto;
+                                msj.tipo = OK;
+                                memcpy(&msj.LC, &LC, sizeof(int) * nprocess);
+                                strcpy(msj.seccion, process[position].nombre);
+                                if (sendto(scket, &msj, sizeof(msj), 0, (struct sockaddr *)&direcciondestino, sizeof(direcciondestino)) < 0)
+                                {
+                                    perror("error en sendto");
+                                    close(scket);
+                                    return 1;
+                                }
+                            } else {
+                                strcpy(bloqueado[pBloqueado], msj.seccion);
+                                pBloqueado++;
                             }
                         } else {
-                            strcpy(bloqueado[pBloqueado], msj.seccion);
-                            pBloqueado++;
+                                strcpy(bloqueado[pBloqueado], msj.seccion);
+                                pBloqueado++;
                         }
                     }
                 } else {
@@ -329,6 +354,7 @@ int main(int argc, char *argv[])
             printf("%s: TICK\n", process[position].nombre);
             for (i = 0; i < nprocess; i++)
             {
+                peticionLock[i] = LC[i];
                 if (i != position)
                 {
                     direcciondestino.sin_port = process[i].puerto;
